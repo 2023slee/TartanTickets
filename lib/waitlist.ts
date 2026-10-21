@@ -32,6 +32,7 @@ export type WaitlistService = {
   join(eventId: string, name: string): { position?: number; error?: string };
   releaseSeat(eventId: string): WaitlistOffer | null;
   getState(eventId: string): WaitlistSnapshot;
+  reset(eventId: string): WaitlistSnapshot;
 };
 
 function normalizeName(name: string): string {
@@ -173,6 +174,12 @@ export function createWaitlistService(
     },
 
     getState,
+
+    reset(eventId) {
+      eventWaitlists.delete(eventId);
+      store.waitlistInventory![eventId] = { released: 0, held: 0 };
+      return getState(eventId);
+    },
   };
 }
 

@@ -97,4 +97,6 @@ As an officer, I want to scan tickets at the door.
 
 HW3 Part B demonstrates Story 4 (Waitlist). Students join by entering a name in a text box; there is no sign-in provider, and typed names do not verify identity. Waitlist order is first-in, first-out. A clearly labeled classroom simulation releases a seat, offers it exclusively to the next person for 30 minutes, and shows the recipient and deadline in an on-screen classroom-simulation notification. If the hold expires, the seat moves to the next waiting person for a new 30-minute hold; if nobody is waiting, the seat returns to available inventory. The server enforces expiry when waitlist state is next processed, without a background job.
 
+The Robotics Club Demo Day also has a “Reset waitlist demo” control that restores only that event's queue, offers, and released-seat inventory to its original sold-out state. The control remains available when seats are open; in that state, the page explains that waitlist and seat-release simulation controls are available while sold out.
+
 There are no real payments. Wherever charging would otherwise be needed, use a "Simulated payment" button; Story 4 itself requires no payment flow. There is no database: state is held in server memory and resets on every deploy and server restart.

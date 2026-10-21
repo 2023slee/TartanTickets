@@ -14,6 +14,7 @@ type WaitlistService = {
   join(eventId: string, name: string): { position?: number; error?: string };
   releaseSeat(eventId: string): WaitlistOffer | null;
   getState(eventId: string): WaitlistSnapshot;
+  reset(eventId: string): WaitlistSnapshot;
 };
 
 type WaitlistModule = {
@@ -123,6 +124,37 @@ describe("Story 4 / AC1: seat offer and expiry", () => {
       offer: { recipient_name: "Avery Chen" },
       queue: [{ name: "Jordan Lee", position: 1 }],
       available_seats: 0,
+    });
+  });
+
+  describe("Story 4 / demo: resetting demo state", () => {
+    it("clears the selected event's waitlist and inventory without changing another event", () => {
+      const targetEvent = event({ event_id: "evt_robotics", capacity: 1 });
+      const otherEvent = event({ event_id: "evt_other", capacity: 1 });
+      const store = createStore(
+        [targetEvent, otherEvent],
+        [
+          order({ order_id: "ord_robotics", event_id: "evt_robotics" }),
+          order({ order_id: "ord_other", event_id: "evt_other" }),
+        ],
+      );
+      const service = waitlistModule.createWaitlistService(store, { now: () => new Date(NOW) });
+      service.join("evt_robotics", "Avery Chen");
+      service.releaseSeat("evt_robotics");
+      service.join("evt_other", "Jordan Lee");
+      service.releaseSeat("evt_other");
+
+      expect(service.reset("evt_robotics")).toEqual({
+        queue: [],
+        offer: null,
+        available_seats: 0,
+      });
+      expect(service.getState("evt_other")).toMatchObject({
+        offer: { recipient_name: "Jordan Lee" },
+        available_seats: 0,
+      });
+      expect(service.releaseSeat("evt_robotics")).toBeNull();
+      expect(service.getState("evt_robotics").available_seats).toBe(1);
     });
   });
 

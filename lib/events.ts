@@ -39,6 +39,8 @@ export type Store = {
   waitlistInventory?: Record<string, { released: number; held: number }>;
 };
 
+export const ROBOTICS_DEMO_EVENT_ID = "evt_robotics";
+
 const SEAT_USING_STATUSES: ReadonlySet<OrderRecord["status"]> = new Set(["pending", "paid"]);
 
 export function createStore(events: EventRecord[], orders: OrderRecord[]): Store {
@@ -106,7 +108,7 @@ function seed(now: Date): Store {
       status: "published",
     },
     {
-      event_id: "evt_robotics",
+      event_id: ROBOTICS_DEMO_EVENT_ID,
       club_id: "club_robotics",
       title: "Robotics Club Demo Day",
       starts_at: at(9),

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { PublicEvent } from "../lib/events";
+import { ROBOTICS_DEMO_EVENT_ID, type PublicEvent } from "../lib/events";
 import { formatEventDate, formatPrice } from "../lib/format";
 
 type State =
@@ -165,6 +165,32 @@ function EventCard({
     }
   }
 
+  async function resetWaitlistDemo() {
+    setBusy(true);
+    setMessage("");
+    try {
+      const res = await fetch("/api/waitlist/reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event_id: event.event_id }),
+      });
+      if (!res.ok) {
+        setMessage("The classroom waitlist demo could not be reset. Try again.");
+        return;
+      }
+
+      setOffer(null);
+      setJoinOpen(false);
+      setName("");
+      setMessage("The waitlist demo has been reset to its original sold-out state.");
+      await onInventoryChange();
+    } catch {
+      setMessage("The classroom waitlist demo could not be reached. Try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   // Text is rendered through React, which always treats it as plain text (SEC-20).
   return (
     <article className="event-card" aria-labelledby={headingId}>
@@ -244,12 +270,29 @@ function EventCard({
             </button>
           </>
         ) : (
+          <>
+            <button
+              type="button"
+              className="button"
+              onClick={() => setMessage("Ticket purchasing is coming soon.")}
+            >
+              Buy
+            </button>
+            {event.event_id === ROBOTICS_DEMO_EVENT_ID && (
+              <p className="event-message">
+                Waitlist and seat-release simulation are available when this event is sold out.
+              </p>
+            )}
+          </>
+        )}
+        {event.event_id === ROBOTICS_DEMO_EVENT_ID && (
           <button
             type="button"
-            className="button"
-            onClick={() => setMessage("Ticket purchasing is coming soon.")}
+            className="button button-secondary"
+            onClick={resetWaitlistDemo}
+            disabled={busy}
           >
-            Buy
+            Reset waitlist demo
           </button>
         )}
         <p role="status" className="event-message">
