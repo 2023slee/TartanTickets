@@ -41,3 +41,7 @@ All requirements use EARS syntax. Assumption IDs (A1–A12) refer to the list in
 
 - **SEC-21** When a role change, refund, event cancellation, Stripe account change, or attendee export occurs, the system shall write an audit log entry recording who did it, what changed, and when.
 - **SEC-22** The system shall keep audit logs append-only, readable only by platform admins, for one year.
+
+## Input validation
+
+- **SEC-23** If a student submits a waitlist name longer than 80 characters, then the system shall reject it on the server before storing a waitlist entry.

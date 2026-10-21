@@ -123,6 +123,7 @@ export function createWaitlistService(
     join(eventId, name) {
       const event = store.events.find((candidate) => candidate.event_id === eventId);
       if (!event || event.status !== "published") return { error: "event_not_found" };
+      if (name.length > 80) return { error: "invalid_name" };
 
       const normalizedName = normalizeName(name);
       if (!normalizedName) return { error: "invalid_name" };
