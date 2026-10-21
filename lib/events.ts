@@ -33,7 +33,11 @@ export type PublicEvent = {
   sold_out: boolean;
 };
 
-export type Store = { events: EventRecord[]; orders: OrderRecord[] };
+export type Store = {
+  events: EventRecord[];
+  orders: OrderRecord[];
+  waitlistInventory?: Record<string, { released: number; held: number }>;
+};
 
 const SEAT_USING_STATUSES: ReadonlySet<OrderRecord["status"]> = new Set(["pending", "paid"]);
 
@@ -45,7 +49,9 @@ export function seatsRemaining(store: Store, event: EventRecord): number {
   const taken = store.orders
     .filter((o) => o.event_id === event.event_id && SEAT_USING_STATUSES.has(o.status))
     .reduce((sum, o) => sum + o.seats, 0);
-  return Math.max(0, event.capacity - taken);
+  const waitlistInventory = store.waitlistInventory?.[event.event_id];
+  const released = waitlistInventory ? waitlistInventory.released - waitlistInventory.held : 0;
+  return Math.max(0, event.capacity - taken + released);
 }
 
 /** Story 1: published events that haven't started yet, soonest first. */

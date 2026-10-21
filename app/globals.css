@@ -118,6 +118,43 @@ h1 {
   color: var(--muted);
 }
 
+.waitlist-form {
+  display: grid;
+  gap: 8px;
+  flex-basis: 100%;
+  max-width: 360px;
+}
+
+.waitlist-form label {
+  font-weight: 600;
+}
+
+.waitlist-form input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--surface);
+  font: inherit;
+}
+
+.waitlist-form input:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.waitlist-help {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.waitlist-notification {
+  flex-basis: 100%;
+}
+
 .button {
   appearance: none;
   border: 2px solid var(--accent);

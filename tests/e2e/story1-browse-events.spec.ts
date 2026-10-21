@@ -64,14 +64,6 @@ test.describe("Story 1 / AC2: sold-out events", () => {
     await expect(open.getByRole("button", { name: "Join waitlist" })).toHaveCount(0);
   });
 
-  test("Story 1 / AC2: the buttons say purchasing and the waitlist are coming soon", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    const soldOut = eventCard(page, "Robotics Club Demo Day");
-    await soldOut.getByRole("button", { name: "Join waitlist" }).click();
-    await expect(soldOut.getByRole("status")).toHaveText(/coming soon/i);
-  });
 });
 
 test.describe("Story 1 / UX: screen states", () => {
@@ -111,7 +103,7 @@ test.describe("Story 1 / UX: screen states", () => {
 });
 
 test.describe("Story 1 / UX + security", () => {
-  test("Story 1 / UX: the event buttons can be reached and pressed with the keyboard only", async ({
+  test("Story 4 / AC1: the waitlist name field opens from the keyboard", async ({
     page,
   }) => {
     await page.goto("/");
@@ -125,9 +117,7 @@ test.describe("Story 1 / UX + security", () => {
     }
     await expect(waitlist).toBeFocused();
     await page.keyboard.press("Enter");
-    await expect(eventCard(page, "Robotics Club Demo Day").getByRole("status")).toHaveText(
-      /coming soon/i,
-    );
+    await expect(page.getByRole("textbox", { name: "Your name" })).toBeVisible();
   });
 
   test("Story 1 / SEC-20: event text is shown as plain text, never run as code", async ({
